@@ -1,28 +1,28 @@
 import React, { useEffect, useCallback } from 'react';
-import Wrapper from '../../components/Wrapper/Wrapper';
+
 import { connect } from 'react-redux';
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, Grid } from '@material-ui/core'
 import { STORE_PRODUCTS, START_FETCHING, STOP_FETCHING } from '../../redux/actions/actions';
-import { Grid } from '@material-ui/core'
+
+
+import Wrapper from '../../components/Wrapper/Wrapper';
 import ProductsTable from '../../components/Table/Table';
 import ProductsToolbar from '../../components/ProductsToolbar/ProductsToolbar.jsx';
-import axios from '../../services/axios';
-import { failure } from '../../components/Toasts/toasts';
+import { fetchAllProducts } from '../../utils/functions/requisitions'
+
 function Dashboard(props) {
     const { storeProducts, startFetching, stopFetching } = props;
     const { products, isFetching } = props;
 
     const fetchProducts = useCallback(async () => {
-        const response = await axios.get('/produtos');
-        const { data, status } = response;
-        if (status === 200) {
+        const response = await fetchAllProducts();
+        const { data } = response;
+        if (data) {
             startFetching();
             storeProducts(data);
             setTimeout(() => {
                 stopFetching()
-            }, 2000)
-        } else {
-            failure('Ops,houve um problema')
+            }, 1000)
         }
     }, [startFetching, storeProducts, stopFetching])
     useEffect(() => {

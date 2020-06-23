@@ -1,19 +1,9 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
 import EditProductDialog from '../ProductDialogs/EditProductDialog';
 import DeleteProductDialog from '../ProductDialogs/DeleteProductDialog';
 import ListProductDialog from '../ProductDialogs/ListProductDialog';
-
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: '#3f51b5',
-        color: theme.palette.common.white,
-    },
-    body: {
-        fontSize: 14,
-    },
-}))(TableCell);
+import { StyledTableCell } from './StyledTableCell';
 
 const ProductsTable = ({ products, fetchProducts }) => {
     return (

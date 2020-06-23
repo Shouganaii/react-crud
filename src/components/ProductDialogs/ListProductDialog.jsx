@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogContent, TextField } from '@material-ui/core';
-import axios from '../../services/axios';
+import { fetchProductById } from '../../utils/functions/requisitions'
 
 export default function ListProductDialog({ id }) {
     const [open, setOpen] = useState(false);
@@ -12,7 +12,7 @@ export default function ListProductDialog({ id }) {
         setOpen(false);
     };
     const fetchProduct = async () => {
-        const response = await axios.get(`/produto/${id}`);
+        const response = await fetchProductById(id);
         const { status, data } = response;
         if (status === 200) {
             setProduct(data)

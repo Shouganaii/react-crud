@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogContent, DialogActions, DialogTitle, DialogContentText } from '@material-ui/core';
-import axios from '../../services/axios';
-import { success, failure } from '../Toasts/toasts'
+import { fetchProductById, deleteProduct } from '../../utils/functions/requisitions'
 
 export default function DeleteProductDialog({ id, fetchProducts }) {
     const [open, setOpen] = useState(false);
@@ -9,28 +8,21 @@ export default function DeleteProductDialog({ id, fetchProducts }) {
     const handleClickOpen = () => {
         setOpen(true);
     };
-
     const handleClose = () => {
         setOpen(false);
     };
     const fetchProduct = async () => {
-        const response = await axios.get(`/produto/${id}`);
+        const response = await fetchProductById(id);
         const { status, data } = response;
         if (status === 200) {
             setProduct(data)
         }
     }
-    const deleteProduct = async () => {
-        const response = await axios.delete("/produto", {
-            data: product
-        });
-        const { status, data } = response;
-        if (status === 200) {
-            success(data)
+    const deleteProd = async () => {
+        const response = await deleteProduct(product)
+        if (response) {
             handleClose()
             fetchProducts()
-        } else {
-            failure('Ops,houve um problema')
         }
     }
     return (
@@ -49,8 +41,8 @@ export default function DeleteProductDialog({ id, fetchProducts }) {
                     <DialogTitle id="alert-dialog-title">{"Confirmar exclusão?"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description" style={{ fontSize: 30, color: 'black' }}>
-                            Essa ação é irreversível,tem certeza que deseja excluir o item:<br/>
-                           {product.nome}?<br/>
+                            Essa ação é irreversível,tem certeza que deseja excluir o item:<br />
+                            {product.nome}?<br />
                         </DialogContentText>
                     </DialogContent>
                 </DialogContent>
@@ -58,7 +50,7 @@ export default function DeleteProductDialog({ id, fetchProducts }) {
                     <Button onClick={handleClose} color="secondary">
                         Cancelar
                     </Button>
-                    <Button onClick={() => { deleteProduct() }} color="primary">
+                    <Button onClick={() => { deleteProd() }} color="primary">
                         Confirmar exclusão
                     </Button>
                 </DialogActions>

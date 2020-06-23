@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogContent, DialogActions, TextField } from '@material-ui/core';
-import axios from '../../services/axios';
-import { success, failure } from '../Toasts/toasts'
+import { saveProduct } from '../../utils/functions/requisitions'
 export default function AddProductDialog({ fetchProducts }) {
     const [open, setOpen] = useState(false);
     const [product, setProduct] = useState({ nome: '', quantidade: '', valor: '' })
@@ -15,17 +14,11 @@ export default function AddProductDialog({ fetchProducts }) {
         setOpen(false);
     };
 
-    const saveProduct = async () => {
-        if (!product.nome || !product.quantidade || !product.valor) {
-            failure('Preencha todos os campos!');
-        } else {
-            const response = await axios.post('/produto', product);
-            const { status, data } = response;
-            if (status === 200) {
-                handleClose()
-                fetchProducts()
-                success(data)
-            }
+    const saveProd = async () => {
+        const response = await saveProduct(product);
+        if (response) {
+            handleClose()
+            fetchProducts()
         }
     }
     return (
@@ -80,7 +73,7 @@ export default function AddProductDialog({ fetchProducts }) {
                     <Button onClick={handleClose} color="secondary">
                         Cancelar
                     </Button>
-                    <Button onClick={() => { saveProduct() }} color="primary">
+                    <Button onClick={() => { saveProd() }} color="primary">
                         Adicionar
                     </Button>
                 </DialogActions>
